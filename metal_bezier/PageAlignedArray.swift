@@ -274,6 +274,18 @@ extension PageAlignedContiguousArray : ExpressibleByArrayLiteral {
 
 extension MTLDevice {
     func makeBufferWithPageAlignedArray<T>(_ array: PageAlignedContiguousArray<T>) -> MTLBuffer? {
-        return self.makeBuffer(bytesNoCopy: array.buffer, length: array.bufferLength, options: .storageModeShared, deallocator: nil)
+        let pageSize = UInt(getpagesize())
+        let pageSizeBitmask = UInt(getpagesize()) - 1
+
+        var calculatedBufferLength = UInt(array.bufferLength)
+        if (calculatedBufferLength & pageSizeBitmask) != 0 {
+            // WARNING: I BELIEVE this is safe to do. Metal wants a fully page aligned buffer length consisting of a
+            // page aligned pointer and a page-aligned length. If the length is not page aligned, I round it up to the
+            // next page size here. I figure it would't actually read those extra bytes. Then again why is this
+            // requirement there in the first place?
+            calculatedBufferLength &= ~(pageSize - 1)
+            calculatedBufferLength += pageSize
+        }
+        return self.makeBuffer(bytesNoCopy: array.buffer, length: Int(calculatedBufferLength), options: .storageModeShared, deallocator: nil)
     }
 }

@@ -115,7 +115,7 @@ struct GlobalParameters {
     var elementsPerInstance : UInt
 }
 
-class MetalView: MTKView {    
+class MetalBezierView: MTKView {
     private var commandQueue: MTLCommandQueue! = nil
     private var library: MTLLibrary! = nil
     private var pipelineDescriptor = MTLRenderPipelineDescriptor()

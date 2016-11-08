@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import MetalKit
 
 class ViewController: UIViewController {
+    
+    @IBOutlet var metalView : MTKView?
 
     override func viewDidLoad() {
         super.viewDidLoad()

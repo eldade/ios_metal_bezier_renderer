@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:metal_bezier.xcodeproj">
+      location = "self:/Users/eldade/Dropbox/Dev/metal_bezier/ios_metal_bezier_renderer.xcodeproj">
    </FileRef>
 </Workspace>
