@@ -14,6 +14,9 @@
 		5130CC701DCEEC5200FA29CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5130CC6E1DCEEC5200FA29CC /* LaunchScreen.storyboard */; };
 		5130CC7B1DCEEC5200FA29CC /* metal_bezierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC7A1DCEEC5200FA29CC /* metal_bezierTests.swift */; };
 		5130CC861DCEEC5200FA29CC /* metal_bezierUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC851DCEEC5200FA29CC /* metal_bezierUITests.swift */; };
+		5130CC941DCEEC8400FA29CC /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC931DCEEC8400FA29CC /* MetalView.swift */; };
+		5130CC961DCEED4F00FA29CC /* bezier_shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */; };
+		5130CC981DD10BC000FA29CC /* PageAlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC971DD10BC000FA29CC /* PageAlignedArray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +50,9 @@
 		5130CC811DCEEC5200FA29CC /* metal_bezierUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = metal_bezierUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5130CC851DCEEC5200FA29CC /* metal_bezierUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal_bezierUITests.swift; sourceTree = "<group>"; };
 		5130CC871DCEEC5200FA29CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5130CC931DCEEC8400FA29CC /* MetalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetalView.swift; path = ../MetalView.swift; sourceTree = "<group>"; };
+		5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = bezier_shaders.metal; path = ../bezier_shaders.metal; sourceTree = "<group>"; };
+		5130CC971DD10BC000FA29CC /* PageAlignedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageAlignedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +103,9 @@
 		5130CC641DCEEC5200FA29CC /* metal_bezier */ = {
 			isa = PBXGroup;
 			children = (
+				5130CC931DCEEC8400FA29CC /* MetalView.swift */,
+				5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */,
+				5130CC971DD10BC000FA29CC /* PageAlignedArray.swift */,
 				5130CC651DCEEC5200FA29CC /* AppDelegate.swift */,
 				5130CC671DCEEC5200FA29CC /* ViewController.swift */,
 				5130CC691DCEEC5200FA29CC /* Main.storyboard */,
@@ -193,6 +202,7 @@
 				TargetAttributes = {
 					5130CC611DCEEC5200FA29CC = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = E54FNFV6AU;
 						ProvisioningStyle = Automatic;
 					};
 					5130CC751DCEEC5200FA29CC = {
@@ -259,8 +269,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5130CC941DCEEC8400FA29CC /* MetalView.swift in Sources */,
 				5130CC681DCEEC5200FA29CC /* ViewController.swift in Sources */,
 				5130CC661DCEEC5200FA29CC /* AppDelegate.swift in Sources */,
+				5130CC961DCEED4F00FA29CC /* bezier_shaders.metal in Sources */,
+				5130CC981DD10BC000FA29CC /* PageAlignedArray.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,7 +425,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = E54FNFV6AU;
 				INFOPLIST_FILE = metal_bezier/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.eldade.mac-metal-tests.metal-bezier";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -424,7 +439,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = E54FNFV6AU;
 				INFOPLIST_FILE = metal_bezier/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.eldade.mac-metal-tests.metal-bezier";
 				PRODUCT_NAME = "$(TARGET_NAME)";
