@@ -12,9 +12,7 @@
 		5130CC6B1DCEEC5200FA29CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5130CC691DCEEC5200FA29CC /* Main.storyboard */; };
 		5130CC6D1DCEEC5200FA29CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5130CC6C1DCEEC5200FA29CC /* Assets.xcassets */; };
 		5130CC701DCEEC5200FA29CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5130CC6E1DCEEC5200FA29CC /* LaunchScreen.storyboard */; };
-		5130CC7B1DCEEC5200FA29CC /* metal_bezierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC7A1DCEEC5200FA29CC /* metal_bezierTests.swift */; };
-		5130CC861DCEEC5200FA29CC /* metal_bezierUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC851DCEEC5200FA29CC /* metal_bezierUITests.swift */; };
-		5130CC941DCEEC8400FA29CC /* MetaBezierlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC931DCEEC8400FA29CC /* MetaBezierlView.swift */; };
+		5130CC941DCEEC8400FA29CC /* MetalBezierlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC931DCEEC8400FA29CC /* MetalBezierlView.swift */; };
 		5130CC961DCEED4F00FA29CC /* bezier_shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */; };
 		5130CC981DD10BC000FA29CC /* PageAlignedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5130CC971DD10BC000FA29CC /* PageAlignedArray.swift */; };
 /* End PBXBuildFile section */
@@ -45,13 +43,9 @@
 		5130CC6F1DCEEC5200FA29CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5130CC711DCEEC5200FA29CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5130CC761DCEEC5200FA29CC /* ios_metal_bezier_rendererTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ios_metal_bezier_rendererTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5130CC7A1DCEEC5200FA29CC /* metal_bezierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal_bezierTests.swift; sourceTree = "<group>"; };
-		5130CC7C1DCEEC5200FA29CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5130CC811DCEEC5200FA29CC /* ios_metal_bezier_rendererUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ios_metal_bezier_rendererUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5130CC851DCEEC5200FA29CC /* metal_bezierUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = metal_bezierUITests.swift; sourceTree = "<group>"; };
-		5130CC871DCEEC5200FA29CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5130CC931DCEEC8400FA29CC /* MetaBezierlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetaBezierlView.swift; path = ../MetaBezierlView.swift; sourceTree = "<group>"; };
-		5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = bezier_shaders.metal; path = ../bezier_shaders.metal; sourceTree = "<group>"; };
+		5130CC931DCEEC8400FA29CC /* MetalBezierlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalBezierlView.swift; sourceTree = "<group>"; };
+		5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = bezier_shaders.metal; sourceTree = "<group>"; };
 		5130CC971DD10BC000FA29CC /* PageAlignedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageAlignedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,8 +78,6 @@
 			isa = PBXGroup;
 			children = (
 				5130CC641DCEEC5200FA29CC /* ios_metal_bezier_renderer */,
-				5130CC791DCEEC5200FA29CC /* metal_bezierTests */,
-				5130CC841DCEEC5200FA29CC /* metal_bezierUITests */,
 				5130CC631DCEEC5200FA29CC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,7 +95,7 @@
 		5130CC641DCEEC5200FA29CC /* ios_metal_bezier_renderer */ = {
 			isa = PBXGroup;
 			children = (
-				5130CC931DCEEC8400FA29CC /* MetaBezierlView.swift */,
+				5130CC931DCEEC8400FA29CC /* MetalBezierlView.swift */,
 				5130CC951DCEED4F00FA29CC /* bezier_shaders.metal */,
 				5130CC971DD10BC000FA29CC /* PageAlignedArray.swift */,
 				5130CC651DCEEC5200FA29CC /* AppDelegate.swift */,
@@ -115,24 +107,6 @@
 			);
 			name = ios_metal_bezier_renderer;
 			path = metal_bezier;
-			sourceTree = "<group>";
-		};
-		5130CC791DCEEC5200FA29CC /* metal_bezierTests */ = {
-			isa = PBXGroup;
-			children = (
-				5130CC7A1DCEEC5200FA29CC /* metal_bezierTests.swift */,
-				5130CC7C1DCEEC5200FA29CC /* Info.plist */,
-			);
-			path = metal_bezierTests;
-			sourceTree = "<group>";
-		};
-		5130CC841DCEEC5200FA29CC /* metal_bezierUITests */ = {
-			isa = PBXGroup;
-			children = (
-				5130CC851DCEEC5200FA29CC /* metal_bezierUITests.swift */,
-				5130CC871DCEEC5200FA29CC /* Info.plist */,
-			);
-			path = metal_bezierUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,7 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5130CC941DCEEC8400FA29CC /* MetaBezierlView.swift in Sources */,
+				5130CC941DCEEC8400FA29CC /* MetalBezierlView.swift in Sources */,
 				5130CC681DCEEC5200FA29CC /* ViewController.swift in Sources */,
 				5130CC661DCEEC5200FA29CC /* AppDelegate.swift in Sources */,
 				5130CC961DCEED4F00FA29CC /* bezier_shaders.metal in Sources */,
@@ -282,7 +256,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5130CC7B1DCEEC5200FA29CC /* metal_bezierTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +263,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5130CC861DCEEC5200FA29CC /* metal_bezierUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,13 +33,13 @@ class PageAlignedArrayImpl<T> {
         var size : Int
         
         if count == 0 {
-            size = MemoryLayout<T>.size / Int(getpagesize())
+            size = MemoryLayout<T>.stride / Int(getpagesize())
             
-            if MemoryLayout<T>.size % Int(getpagesize()) != 0 {
+            if MemoryLayout<T>.stride % Int(getpagesize()) != 0 {
                 size += Int(getpagesize())
             }
         } else {
-            size = Int(count * MemoryLayout<T>.size)
+            size = Int(count * MemoryLayout<T>.stride)
         }
         
         posix_memalign(&newAddr, alignment, size)
@@ -54,7 +54,7 @@ class PageAlignedArrayImpl<T> {
     
     init(count: Int = 0, ptr: UnsafeMutablePointer<T>? = nil) {
         self.count = count
-        self.space = Int(getpagesize()) / MemoryLayout<T>.size
+        self.space = Int(getpagesize()) / MemoryLayout<T>.stride
         
         self.ptr = PageAlignedArrayImpl.alignedAlloc(count: count)
         
@@ -211,7 +211,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
     }
     
     var bufferLength : Int {
-        return impl.space * MemoryLayout<T>.size
+        return impl.space * MemoryLayout<T>.stride
     }
     
    
