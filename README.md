@@ -12,7 +12,7 @@ As with any GPU-based rendering, we use triangles to actually render our curves,
 
 Here is a wireframe image showing a single curve, to illustrate how the triangles are used to express the curve:
 
-![Visualizing the triangles](Wireframe Screenshot.png)
+![Visualizing the triangles](Wireframe_Screenshot.png)
 
 ## A note about performance
 While the code does perform well enough for most application, the performance is actually a bit unimpressive. For example, in terms of triangles/sec, the iPad Pro appears to be achieving around 2000 curves consisting of 200 triangles each at around 40FPS (around 25ms/frame). That equates a roughly 16M triangles/sec fillrate, which is **significantly** below
