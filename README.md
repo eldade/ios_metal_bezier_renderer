@@ -27,6 +27,6 @@ By way of comparison, if we double the number of curves instead (keeping the per
 
 I also noted that curve width had a huge impact on performance. This leads me to believe that this is ultimately a memory bandwidth issue -- calculating the vertices isn't the issue, but filling out that many pixels for each frame is actually quite expensive.
 
-###Further improvements
+### Further improvements
 
 In the way the program is written, curves are drawn over each other which is pure waste -- I am not using any kind of stencil or depth buffer to prevent overdrawing. Enabling that hugely improves performance for a large number of thick curves, but that will only improve real-world performance in the unique usecase shown here, where thousands of curves are layered on top of each other.
