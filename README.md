@@ -14,9 +14,8 @@ Here is a wireframe image showing a single curve, to illustrate how the triangle
 
 ![Visualizing the triangles](Wireframe_Screenshot.png)
 
-## A note about performance
-While the code does perform well enough for most application, the performance is actually a bit unimpressive. For example, in terms of triangles/sec, the iPad Pro appears to be achieving around 2000 curves consisting of 200 triangles each at around 40FPS (around 25ms/frame). That equates a roughly 16M triangles/sec fillrate, which is **significantly** below
-the expected performance for that device.
+## Thoughts about performance
+While the code does perform well enough for most application, the performance was somewhat lower than I'd initially expected. For example, in terms of triangles/sec, the iPad Pro appears to be achieving around 2000 curves consisting of 200 triangles each at around 40FPS (around 25ms/frame). That equates a roughly 16M triangles/sec, which is **significantly** below the expected performance for that device.
 
 It is possible that the vertex shader computational load is the bottleneck, but Instruments and the GPU profiler inside Xcode are telling a different story, and are indicating that most of the time is being spent in the fragment shader (which in this implementation should be doing absolutely nothing).
 
@@ -24,4 +23,10 @@ Another interesting data point is the fact that while increasing the number of c
 
 For example, on the same iPad Pro, doubling the number of triangles-per-curve from 200 to 400 only increases the per-frame time to around 31ms. That's a 24% increase after we basically doubled the GPU's workload!
 
-By way of comparison, if we double the number of curves instead (keeping the per-curve triangle count at 200), performance drops to around 47ms per frame.
+By way of comparison, if we double the number of curves instead (keeping the per-curve triangle count at 200), performance drops to around 47ms per frame. 
+
+I also noted that curve width had a huge impact on performance. This leads me to believe that this is ultimately a memory bandwidth issue -- calculating the vertices isn't the issue, but filling out that many pixels for each frame is actually quite expensive.
+
+###Further improvements
+
+In the way the program is written, curves are drawn over each other which is pure waste -- I am not using any kind of stencil or depth buffer to prevent overdrawing. Enabling that hugely improves performance for a large number of thick curves, but that will only improve real-world performance in the unique usecase shown here, where thousands of curves are layered on top of each other.
