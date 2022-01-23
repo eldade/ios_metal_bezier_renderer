@@ -177,7 +177,7 @@
 				TargetAttributes = {
 					5130CC611DCEEC5200FA29CC = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = E54FNFV6AU;
+						DevelopmentTeam = C4W6UUH267;
 						ProvisioningStyle = Automatic;
 					};
 					5130CC751DCEEC5200FA29CC = {
@@ -197,6 +197,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -398,13 +399,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = E54FNFV6AU;
+				DEVELOPMENT_TEAM = C4W6UUH267;
 				INFOPLIST_FILE = metal_bezier/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.eldade.mac-metal-tests.metal-bezier";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -412,13 +413,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = E54FNFV6AU;
+				DEVELOPMENT_TEAM = C4W6UUH267;
 				INFOPLIST_FILE = metal_bezier/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.eldade.mac-metal-tests.metal-bezier";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
