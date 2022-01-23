@@ -127,7 +127,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
     ///   contents of `newElements` to the collection, the complexity is O(*n*),
     ///   where *n* is the length of `newElements`.
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C: Collection, C.Iterator.Element == T {
-        let newCount = newElements.count as! Int
+        let newCount = newElements.count
         let oldCount = self.count
         let eraseCount = subrange.count
         
