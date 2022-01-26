@@ -1,24 +1,24 @@
-//MIT License
+// MIT License
 //
-//Copyright (c) 2016
+// Copyright (c) 2016
 //
-//Permission is hereby granted, free of charge, to any person obtaining a copy
-//of this software and associated documentation files (the "Software"), to deal
-//in the Software without restriction, including without limitation the rights
-//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//copies of the Software, and to permit persons to whom the Software is
-//furnished to do so, subject to the following conditions:
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 //
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//SOFTWARE.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import CoreFoundation
 import Metal
@@ -27,10 +27,10 @@ class PageAlignedArrayImpl<T> {
     var space: Int
     var ptr: UnsafeMutablePointer<T>
     
-    static private func alignedAlloc(count: Int) -> UnsafeMutablePointer<T> {
-        var newAddr:UnsafeMutableRawPointer?
-        let alignment : Int = Int(getpagesize())
-        var size : Int
+    private static func alignedAlloc(count: Int) -> UnsafeMutablePointer<T> {
+        var newAddr: UnsafeMutableRawPointer?
+        let alignment = Int(getpagesize())
+        var size: Int
         
         if count == 0 {
             size = MemoryLayout<T>.stride / Int(getpagesize())
@@ -47,11 +47,10 @@ class PageAlignedArrayImpl<T> {
         return newAddr!.assumingMemoryBound(to: T.self)
     }
     
-    static private func freeAlignedAlloc(addr : UnsafeMutablePointer<T>) {
+    private static func freeAlignedAlloc(addr: UnsafeMutablePointer<T>) {
         free(addr)
     }
 
-    
     init(count: Int = 0, ptr: UnsafeMutablePointer<T>? = nil) {
         self.count = count
         self.space = Int(getpagesize()) / MemoryLayout<T>.stride
@@ -63,7 +62,7 @@ class PageAlignedArrayImpl<T> {
         }
     }
     
-    var count : Int {
+    var count: Int {
         didSet {
             if space <= count {
                 let newSpace = count * 2
@@ -89,7 +88,7 @@ class PageAlignedArrayImpl<T> {
 }
 
 struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
-    private var impl: PageAlignedArrayImpl<T> = PageAlignedArrayImpl<T>(count: 0)
+    private var impl: PageAlignedArrayImpl<T> = .init(count: 0)
 
     /// Replaces the specified subrange of elements with the given collection.
     ///
@@ -127,8 +126,8 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
     ///   and `newElements`. If the call to `replaceSubrange` simply appends the
     ///   contents of `newElements` to the collection, the complexity is O(*n*),
     ///   where *n* is the length of `newElements`.
-    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C : Collection, C.Iterator.Element == T {
-        let newCount = newElements.count as! Int
+    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C) where C: Collection, C.Iterator.Element == T {
+        let newCount = newElements.count
         let oldCount = self.count
         let eraseCount = subrange.count
         
@@ -149,7 +148,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
             
             // Assign over the original subRange
             var i = newElements.startIndex
-            for j in CountableRange(subrange) {
+            for j in subrange {
                 elements[j] = newElements[i]
                 newElements.formIndex(after: &i)
             }
@@ -158,8 +157,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
                 (elements + j).initialize(to: newElements[i])
                 newElements.formIndex(after: &i)
             }
-        }
-        else { // We're not growing the buffer
+        } else { // We're not growing the buffer
             // Assign all the new elements into the start of the subRange
             var i = subrange.lowerBound
             var j = newElements.startIndex
@@ -176,8 +174,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
             
             // Move the tail backward to cover the shrinkage.
             let shrinkage = -growth
-            if tailCount > shrinkage {   // If the tail length exceeds the shrinkage
-                
+            if tailCount > shrinkage { // If the tail length exceeds the shrinkage
                 // Assign over the rest of the replaced range with the first
                 // part of the tail.
                 newTailStart.moveAssign(from: oldTailStart, count: shrinkage)
@@ -185,8 +182,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
                 // Slide the rest of the tail back
                 oldTailStart.moveInitialize(
                     from: oldTailStart + shrinkage, count: tailCount - shrinkage)
-            }
-            else {                      // Tail fits within erased elements
+            } else { // Tail fits within erased elements
                 // Assign over the start of the replaced range with the tail
                 newTailStart.moveAssign(from: oldTailStart, count: tailCount)
                 
@@ -206,26 +202,25 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
         return i + 1
     }
     
-    var buffer : UnsafeMutablePointer<T> {
+    var buffer: UnsafeMutablePointer<T> {
         return impl.ptr
     }
     
-    var bufferLength : Int {
+    var bufferLength: Int {
         return impl.space * MemoryLayout<T>.stride
     }
     
-   
     var count: Int {
         return impl.count
     }
     
     subscript(index: Int) -> T {
         get {
-            assert (index < count, "Array index out of range")
+            assert(index < count, "Array index out of range")
             return impl.ptr[index]
         }
         mutating set {
-            assert (index < count, "Array index out of range")
+            assert(index < count, "Array index out of range")
             impl.ptr[index] = newValue
         }
     }
@@ -259,7 +254,7 @@ struct PageAlignedContiguousArray<T>: RangeReplaceableCollection {
     }
 }
 
-extension PageAlignedContiguousArray : ExpressibleByArrayLiteral {
+extension PageAlignedContiguousArray: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: T...) {
         self.init()
         for element in elements {

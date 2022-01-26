@@ -1,55 +1,53 @@
-//MIT License
+// MIT License
 //
-//Copyright (c) 2016
+// Copyright (c) 2016
 //
-//Permission is hereby granted, free of charge, to any person obtaining a copy
-//of this software and associated documentation files (the "Software"), to deal
-//in the Software without restriction, including without limitation the rights
-//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//copies of the Software, and to permit persons to whom the Software is
-//furnished to do so, subject to the following conditions:
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 //
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//SOFTWARE.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-
-import UIKit
+import Metal
 import MetalKit
+import UIKit
 
-struct BezierParameters
-{
+struct BezierParameters {
     // Set coordinateRange to <1.0 to restrict the drawing area
-    static let coordinateRange : Float = 1.0
-    
-    var a : vector_float2 = vector_float2()
-    var b : vector_float2 = vector_float2()
-    var p1 : vector_float2 = vector_float2()
-    var p2 : vector_float2 = vector_float2()
+    static let coordinateRange: Float = 1.0
+
+    var a: vector_float2 = .init()
+    var b: vector_float2 = .init()
+    var p1: vector_float2 = .init()
+    var p2: vector_float2 = .init()
 
     // This will define line width for all curves:
-    var lineWidth : Float = 0.10
-    
-    var color : vector_float4 = vector_float4()
+    var lineWidth: Float = 0.10
 
-    private var aMotionVec : vector_float2 = vector_float2()
-    private var bMotionVec : vector_float2 = vector_float2()
-    private var p1MotionVec : vector_float2 = vector_float2()
-    private var p2MotionVec : vector_float2 = vector_float2()
-    
+    var color: vector_float4 = .init()
+
+    private var aMotionVec: vector_float2 = .init()
+    private var bMotionVec: vector_float2 = .init()
+    private var p1MotionVec: vector_float2 = .init()
+    private var p2MotionVec: vector_float2 = .init()
+
     // This sets the animation speed for the curves:
-    private var animationSpeed : Float = 0.01
-    
-    private var unused : Float = 0.01
+    private var animationSpeed: Float = 0.01
 
-    
+    private var unused: Float = 0.01
+
     private func makeRandSpeed() -> Float {
         return ((Float(arc4random_uniform(2000000)) / 1000000.0) - 1.0) * animationSpeed
     }
@@ -64,7 +62,7 @@ struct BezierParameters
                               y: Float(arc4random_uniform(1000)) / 1000.0,
                               z: Float(arc4random_uniform(1000)) / 1000.0,
                               w: 1.0)
-        
+
         // Start this curve out at a random position and shape:
         a.x = makeRandCoord()
         a.y = makeRandCoord()
@@ -92,7 +90,7 @@ struct BezierParameters
         p2MotionVec.y = makeRandSpeed()
     }
 
-    private func animateVector(vector : vector_float2, motionVec : inout vector_float2) -> vector_float2 {
+    private func animateVector(vector: vector_float2, motionVec: inout vector_float2) -> vector_float2 {
         if vector.x >= BezierParameters.coordinateRange || vector.x <= -BezierParameters.coordinateRange {
             motionVec.x = -motionVec.x
         }
@@ -110,7 +108,7 @@ struct BezierParameters
         p2 = animateVector(vector: p2, motionVec: &p2MotionVec)
     }
 
-    init(a : vector_float2, b: vector_float2, p1 : vector_float2, p2 : vector_float2) {
+    init(a: vector_float2, b: vector_float2, p1: vector_float2, p2: vector_float2) {
         self.a = a
         self.b = b
         self.p1 = p1
@@ -119,41 +117,39 @@ struct BezierParameters
 }
 
 struct GlobalParameters {
-    var elementsPerInstance : UInt
+    var elementsPerInstance: UInt
 }
 
 class MetalBezierView: MTKView {
-    private var commandQueue: MTLCommandQueue! = nil
-    private var library: MTLLibrary! = nil
+    private var commandQueue: MTLCommandQueue!
+    private var library: MTLLibrary!
     private var pipelineDescriptor = MTLRenderPipelineDescriptor()
-    private var pipelineState : MTLRenderPipelineState! = nil
-    private var vertexBuffer : MTLBuffer! = nil
+    private var pipelineState: MTLRenderPipelineState!
+    private var vertexBuffer: MTLBuffer!
 
-    var indices : [UInt16] = [UInt16]()
-    var indicesBuffer : MTLBuffer?
+    var indices: [UInt16] = .init()
+    var indicesBuffer: MTLBuffer?
 
-    var globalParamBuffer : MTLBuffer?
+    var globalParamBuffer: MTLBuffer?
 
     // This is where we store all curve parameters (including their current positions during
     // animation). We use the PageAlignedContiguousArray to directly store and manipulate
     // them in shared memory.
-    var params : PageAlignedContiguousArray<BezierParameters> = PageAlignedContiguousArray<BezierParameters>(repeating: BezierParameters(), count: 2000)
-    var paramBuffer : MTLBuffer?
+    var params: PageAlignedContiguousArray<BezierParameters> = .init(repeating: BezierParameters(), count: 2000)
+    var paramBuffer: MTLBuffer?
 
-    override init(frame frameRect: CGRect, device: MTLDevice?)
-    {
+    override init(frame frameRect: CGRect, device: MTLDevice?) {
         super.init(frame: frameRect, device: device)
         configureWithDevice(device!)
     }
 
-    required init(coder: NSCoder)
-    {
+    required init(coder: NSCoder) {
         super.init(coder: coder)
         configureWithDevice(MTLCreateSystemDefaultDevice()!)
     }
 
-    private func configureWithDevice(_ device : MTLDevice) {
-        self.clearColor = MTLClearColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+    private func configureWithDevice(_ device: MTLDevice) {
+        self.clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.framebufferOnly = true
         self.colorPixelFormat = .bgra8Unorm
@@ -171,7 +167,7 @@ class MetalBezierView: MTKView {
             super.device = device
             commandQueue = (self.device?.makeCommandQueue())!
 
-            library = device?.newDefaultLibrary()
+            library = device?.makeDefaultLibrary()
             pipelineDescriptor.vertexFunction = library?.makeFunction(name: "bezier_vertex")
             pipelineDescriptor.fragmentFunction = library?.makeFunction(name: "bezier_fragment")
             pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
@@ -181,17 +177,14 @@ class MetalBezierView: MTKView {
 
             do {
                 try pipelineState = device?.makeRenderPipelineState(descriptor: pipelineDescriptor)
-            }
-            catch {
-
-            }
+            } catch {}
             for (index, _) in params.enumerated() {
                 params[index] = BezierParameters()
             }
 
             paramBuffer = device.makeBufferWithPageAlignedArray(params)
 
-            var currentIndex : UInt16 = 0
+            var currentIndex: UInt16 = 0
 
             // Set how many "elements" are to be used for each curve. Normally we would
             // calculate this per curve, but since we're using the indexed primitives
@@ -199,8 +192,8 @@ class MetalBezierView: MTKView {
             // the number of triangles, not vertexes:
             var globalParams = GlobalParameters(elementsPerInstance: 200)
             globalParamBuffer = (self.device?.makeBuffer(bytes: &globalParams,
-                                                     length: MemoryLayout<GlobalParameters>.size,
-                                                     options: .storageModeShared))
+                                                         length: MemoryLayout<GlobalParameters>.size,
+                                                         options: .storageModeShared))
 
             repeat {
                 indices.append(currentIndex)
@@ -211,14 +204,13 @@ class MetalBezierView: MTKView {
 
             let indicesDataSize = MemoryLayout<UInt>.size * indices.count
             indicesBuffer = (self.device?.makeBuffer(bytes: indices,
-                                                         length: indicesDataSize,
-                                                         options: .storageModeShared))
+                                                     length: indicesDataSize,
+                                                     options: .storageModeShared))
         }
     }
 
     override func draw(_ rect: CGRect) {
-
-        // Animate all of our curves. No need to reload this into the GPU for each frame. 
+        // Animate all of our curves. No need to reload this into the GPU for each frame.
         // The params are in shared memory so our modifications will be automatically visible
         // to the vertex shader.
         for (index, _) in params.enumerated() {
@@ -228,27 +220,26 @@ class MetalBezierView: MTKView {
         let commandBuffer = commandQueue!.makeCommandBuffer()
 
         let renderPassDescriptor = self.currentRenderPassDescriptor
-        
+
         if renderPassDescriptor == nil {
             return
         }
-        
 
-        let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor!)
+        let renderEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor!)
 
-        renderEncoder.setRenderPipelineState(pipelineState)
+        renderEncoder?.setRenderPipelineState(pipelineState)
 
-        renderEncoder.setVertexBuffer(paramBuffer, offset: 0, at: 0)
-        renderEncoder.setVertexBuffer(globalParamBuffer, offset: 0, at: 1)
+        renderEncoder?.setVertexBuffer(paramBuffer, offset: 0, index: 0)
+        renderEncoder?.setVertexBuffer(globalParamBuffer, offset: 0, index: 1)
 
         // Enable this to see the actual triangles instead of a solid curve:
-        //renderEncoder.setTriangleFillMode(.lines)
+        // renderEncoder.setTriangleFillMode(.lines)
 
-        renderEncoder.drawIndexedPrimitives(type: .triangle, indexCount: indices.count, indexType: .uint16, indexBuffer: indicesBuffer!, indexBufferOffset: 0, instanceCount: params.count)
+        renderEncoder?.drawIndexedPrimitives(type: .triangle, indexCount: indices.count, indexType: .uint16, indexBuffer: indicesBuffer!, indexBufferOffset: 0, instanceCount: params.count)
 
-        renderEncoder.endEncoding()
+        renderEncoder?.endEncoding()
 
-        commandBuffer.present(self.currentDrawable!)
-        commandBuffer.commit()
+        commandBuffer?.present(self.currentDrawable!)
+        commandBuffer?.commit()
     }
 }
